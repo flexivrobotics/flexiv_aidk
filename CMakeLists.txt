@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.4)
 # ===================================================================
 # PROJECT CONFIG
 # ===================================================================
-project(flexiv_aidk VERSION 1.0.0)
+project(flexiv_aidk VERSION 1.1)
 
 # C++17 required
 set(CMAKE_CXX_STANDARD 17)
