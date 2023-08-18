@@ -1,0 +1,14 @@
+{
+    "project": "TUTORIAL",
+    "command": {
+        "command": "custom",
+        "obj_name": "t9",
+        "coordinate_id": 0,
+        "camera_id": "CAMID_0",
+        "instruction_id": -1,
+        "custom": "test_0"
+    },
+    "keys": [
+        "bbox"
+    ]
+}

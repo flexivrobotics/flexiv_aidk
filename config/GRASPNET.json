@@ -1,0 +1,24 @@
+{
+    "project": "GRASPNET",
+    "command": {
+        "command": "POSE6D",
+        "obj_name": "GRASPNET_graspnet_0",
+        "coordinate_id": 0,
+        "camera_id": "CAMID_0",
+        "instruction_id": -1,
+        "custom": "test_0",
+        "camera_pose": [
+            0.55,
+            -0.034,
+            0.66,
+            0.0,
+            -0.7071068,
+            0.7071068,
+            0.0
+        ]
+    },
+    "keys": [
+        "obj_pose",
+        "double_value"
+    ]
+}
