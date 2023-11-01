@@ -1,12 +1,12 @@
 {
     "project": "GRASPNET",
     "command": {
-        "command": "POSE6D",
+        "custom": "POSE6D",
+        "command": "CUSTOM",
+        "direct_command": "",
         "obj_name": "GRASPNET_graspnet_0",
         "coordinate_id": 0,
         "camera_id": "CAMID_0",
-        "instruction_id": -1,
-        "custom": "test_0",
         "camera_pose": [
             0.55,
             -0.034,
@@ -15,6 +15,23 @@
             -0.7071068,
             0.7071068,
             0.0
+        ],
+        "tcp_pose": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+        ],
+        "tcp_force": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
         ]
     },
     "keys": [

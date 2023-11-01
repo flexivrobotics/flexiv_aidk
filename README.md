@@ -4,10 +4,6 @@
 
 Flexiv AIDK (AI Development Kit), is a development kit to enable flexible AI service calling and control with client.
 
-## References
-
-[Flexiv AIDK Home Page](https://aidk.flexiv.com/) is the main reference. It contains important information including user manual and API documentation.
-
 ## Compatibility Overview
 
 | **Supported OS**               | **Supported processor** | **Supported language** | **Required compiler kit** |
@@ -15,8 +11,6 @@ Flexiv AIDK (AI Development Kit), is a development kit to enable flexible AI ser
 | Linux (Ubuntu 18/20/22 tested) | x86_64           | C++, Python            | build-essential           |
 
 ## Quick Start
-
-**NOTE:** the full documentation is in [Flexiv AIDK Manual](https://aidk.flexiv.com/manual/).
 
 ### Setup
 Before using c++ and python AIDK api, please make sure NoemaEdge is running.
@@ -35,7 +29,7 @@ Here takes project `GRASPNET` as an example. To setup NoemaEdge App, take the fo
 
 Finally, start environment and start program `InferApp`. Now the NoemaEdge App is ready and its status is shown below.
 
-![](./state.jpg)
+![](./ui.jpg)
 
 Note: If NoemaEdge is running remotely, please make sure the AIDK machine have network connection with it. For more details, please consult Flexiv members for help.
 
@@ -72,16 +66,18 @@ The C++ interface of Flexiv AIDK is packed into a unified modern CMake library n
 6. To run an compiled example program:
 
         ./test_aidk_compute [address] [config_path] [total_num] [enable_v1x]
+        ./test_aidk_compute_image [address] [config_path] [total_num] 
         ./test_aidk_others [address] [config_path] [version]
 
 
      e.g. to communicate with NoemaEdge App (version v3.1.0) running in remote machine with ip 10.24.14.101:
 
         ./test_aidk_compute 10.24.14.101 ../../config/GRASPNET.json 1 false
+        ./test_aidk_compute_image 10.24.14.101 ../../config/GRASPNET_IMAGE.json 1 
         ./test_aidk_others 10.24.14.101 ../../config/GRASPNET.json v3.1.0
 
 
-     Note: port ``18203`` is used, and ``sudo`` is not required unless prompted by the program.
+     Note: Port ``18203`` is used, and ``sudo`` is not required unless prompted by the program.
 
 
 ### Python AIDK
@@ -92,6 +88,7 @@ To run an example Python program:
 
         cd release/example_py
         python3 test_aidk_compute.py --ip [address] --config [config_path] --num [num] (--enable-v1x)
+        python3 test_aidk_compute_image.py --ip [address] --config [config_path] --num [num]
 
 For example, to communicate with local running NoemaEdge:
 
@@ -139,11 +136,15 @@ and details can be found in test_grasping_with_rdk.py:
 
 The example script `test_aidk_others.py` supports version>=v2.11.1 and`test_aidk_compute.py` supports version>=2.10.0.
 
-`Supported commands` are:
+For NoemaEdge version < v3.2.0, supported `custom` are:
 
  "POS3D", "POSE6D", "GRASP_POSE", "KEYPOINT", "BBOX", "CLASSIFY", "GET_INT_VALUE", "GET_DOUBLE_VALUE", "KEYPOINT3D", "CUSTOM".
 
-`Supported keys` are:  "bbox", "keypoints", "positions", "obj_pose", "valid","double_value", "int_value", "name".
+ For NoemaEdge version >= v3.2.0, supported `custom` can be arbitrary command defined as workflow name in project editor.
+
+Supported `keys` are:  "bbox", "keypoints", "positions", "obj_pose", "valid","double_value", "int_value", "name".
+
+Note:  For Noema version >= v3.2.0, make sure "command" in config json is always "CUSTOM", and "custom" is the real workflow command.
 
 ## API List
 
@@ -151,9 +152,11 @@ The example script `test_aidk_others.py` supports version>=v2.11.1 and`test_aidk
 | ---------------- | ---------------- |---------------- | ---------------- |
 | detect_v1x | computing | send a detect request V1x | >= v2.11.1
 | detect   | computing | send a detect request   | >= v2.10.0
+| detect_with_image   | computing | send a detect request with image  | >= v2.10.0
 | get_detected_obj_names | computing | function to get all detected object names   | >= v2.10.0
 | get_detected_obj_nums | computing | function to get all detected object nums   | >= v2.10.0
 | get_detected_obj_num | computing | function to get detected object number based of object name  | >= v2.10.0
+| get_detected_time | computing | function to get timestamp of detect request | >= v3.2.0
 | parse_result | computing | function to parse detection result   | >= v2.10.0
 | get_camera_intrinsic | computing | function to get camera intrinsic   | >= v2.10.0
 | reload_configs| configure | reload project config | >= v2.11.1
