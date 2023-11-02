@@ -1,14 +1,42 @@
 {
     "project": "TUTORIAL",
     "command": {
-        "command": "custom",
-        "obj_name": "t9",
+        "custom": "CUSTOM",
+        "command": "CUSTOM",
+        "direct_command": "",
+        "obj_name": "t5",
         "coordinate_id": 0,
-        "camera_id": "CAMID_0",
-        "instruction_id": -1,
-        "custom": "test_0"
+        "camera_id": "",
+        "camera_pose": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+        ],
+        "tcp_pose": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+        ],
+        "tcp_force": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
     },
     "keys": [
-        "bbox"
+        "valid",
+        "double_value",
+        "int_value"
     ]
 }

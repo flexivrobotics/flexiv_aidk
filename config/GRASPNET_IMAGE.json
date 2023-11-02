@@ -1,0 +1,33 @@
+{
+    "project": "GRASPNET",
+    "command": {
+        "custom": "POSE6D",
+        "direct_command": "",
+        "obj_name": "GRASPNET_graspnet_0",
+        "coordinate_id": 0,
+        "camera_id": "",
+        "camera_pose": [
+            0.55,
+            -0.034,
+            0.66,
+            0.0,
+            -0.7071068,
+            0.7071068,
+            0.0
+        ],
+        "camera_intrinsic": [
+            1280,
+            720,
+            630.29,
+            364.579,
+            924,
+            923.18
+        ],
+        "rgb_path": "../rgb.png",
+        "depth_path": "../depth.png"
+    },
+    "keys": [
+        "obj_pose",
+        "double_value"
+    ]
+}

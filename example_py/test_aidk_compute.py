@@ -9,6 +9,7 @@ import logging
 import os
 import sys
 import time
+from datetime import datetime
 
 logging.basicConfig(level=logging.INFO)
 
@@ -18,7 +19,6 @@ import flexivaidk as aidk
 
 
 def main(
-    project,
     config,
     keys,
     ip="127.0.0.1",
@@ -46,22 +46,30 @@ def main(
         # ai >= v2.11.1
         if enable_v1x:
             state = client.detect_v1x(
-                command=config["custom"],
-                instruction_id=config["instruction_id"],
+                config["direct_command"],
+                config["camera_pose"],
+                config["tcp_pose"],
+                config["tcp_force"],
             )
 
         # ai >= v2.10.0
         else:
             state = client.detect(
-                **config,
+                config["obj_name"],
+                config["camera_id"],
+                config["coordinate_id"],
+                config["camera_pose"],
+                config["tcp_pose"],
+                config["tcp_force"],
+                config["command"],
+                config["custom"],
             )
         infer_time = time.time() - tic
         logging.info(
-            "detect %d: %.1f ms, %.1f Hz, instruction %d",
+            "detect %d: %.1f ms, %.1f Hz",
             idx,
             1000 * infer_time,
             1 / infer_time,
-            config["instruction_id"],
         )
         logging.info("state: %s", state)
         logging.info(
@@ -73,6 +81,11 @@ def main(
         for key in keys:
             logging.info("key: {}".format(key))
             parse_state, result_list = client.parse_result(config["obj_name"], key, -1)
+            logging.info(
+                "detected time stamp: {}".format(
+                    datetime.fromtimestamp(client.get_detected_time())
+                )
+            )
             if not parse_state:
                 logging.error("Parse result error!!!")
                 continue
@@ -84,8 +97,6 @@ def main(
                 elif key in ["valid", "double_value", "int_value", "name"]:
                     for result in result_list:
                         logging.info(getattr(result, key))
-
-        config["instruction_id"] += 1
 
 
 if __name__ == "__main__":
@@ -123,7 +134,6 @@ if __name__ == "__main__":
     logging.info("Test config:\n%s", config)
 
     main(
-        config["project"],
         config["command"],
         config["keys"],
         args.ip,
