@@ -4,6 +4,10 @@
 
 Flexiv AIDK (AI Development Kit), is a development kit to enable flexible AI service calling and control with client.
 
+## References
+
+[Flexiv AIDK Home Page](https://aidk.flexiv.com/) is the main reference. It contains important information including user manual and API documentation.
+
 ## Compatibility Overview
 
 | **Supported OS**               | **Supported processor** | **Supported language** | **Required compiler kit** |
@@ -11,6 +15,9 @@ Flexiv AIDK (AI Development Kit), is a development kit to enable flexible AI ser
 | Linux (Ubuntu 18/20/22 tested) | x86_64           | C++, Python            | build-essential           |
 
 ## Quick Start
+
+**NOTE:** the full documentation is in [Flexiv AIDK Manual](https://aidk.flexiv.com/manual/).
+
 
 ### Setup
 Before using c++ and python AIDK api, please make sure NoemaEdge is running.
