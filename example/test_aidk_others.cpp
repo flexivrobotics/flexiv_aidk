@@ -6,9 +6,12 @@
  */
 
 #include "flexiv/ai/aidk.hpp"
-#include <fstream>
+
 #include <nlohmann/json.hpp>
+
+#include <fstream>
 #include <typeinfo>
+
 using json = nlohmann::json;
 
 bool load_config(json &js, std::string file_path,
@@ -35,6 +38,10 @@ bool load_config(json &js, std::string file_path,
 
 int main(int argc, char **argv)
 {
+    std::cout
+        << "Example Usage: ./test_aidk_others [address] [config_path] [version]"
+        << std::endl;
+
     // init AIDK
     flexiv::ai::AIDKClient client(argv[1], 10);
 

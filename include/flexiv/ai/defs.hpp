@@ -153,6 +153,29 @@ struct Result
     std::vector<std::vector<double>> vect;
 };
 
+// Data structure for camera images result store
+struct FrameResult
+{
+    int width;
+    int height;
+    std::vector<u_char> color;
+    std::vector<u_char> depth;
+};
+
+// Data structure for camera intrinsic store
+struct IntrinsicResult
+{
+    int width;
+    int height;
+    float ppx;
+    float ppy;
+    float fx;
+    float fy;
+    std::vector<float> coeffs;
+    float depth_scale;
+    std::string serial_number;
+};
+
 // Data structure for ai status
 struct AIStatus
 {

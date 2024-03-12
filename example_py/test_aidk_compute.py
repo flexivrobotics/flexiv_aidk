@@ -23,7 +23,7 @@ def main(
     keys,
     ip="127.0.0.1",
     total_num=30,
-    enable_v1x=False,
+    detect_version="v1",
     detect_timeout=10,
 ):
     client = aidk.AIDKClient(ip, detect_timeout)
@@ -43,17 +43,8 @@ def main(
         time.sleep(1)
         tic = time.time()
 
-        # ai >= v2.11.1
-        if enable_v1x:
-            state = client.detect_v1x(
-                config["direct_command"],
-                config["camera_pose"],
-                config["tcp_pose"],
-                config["tcp_force"],
-            )
-
         # ai >= v2.10.0
-        else:
+        if detect_version == "v1":
             state = client.detect(
                 config["obj_name"],
                 config["camera_id"],
@@ -63,6 +54,13 @@ def main(
                 config["tcp_force"],
                 config["command"],
                 config["custom"],
+            )
+        elif detect_version == "v2":
+            state = client.detect_v2(
+                config["direct_command"],
+                config.get("flange_pose", [0, 0, 0, 1, 0, 0, 0]),
+                config.get("tcp_pose", [0, 0, 0, 1, 0, 0, 0]),
+                config.get("tcp_force", [0, 0, 0, 0, 0, 0]),
             )
         infer_time = time.time() - tic
         logging.info(
@@ -116,11 +114,9 @@ if __name__ == "__main__":
         default=10,
     )
     parser.add_argument(
-        "--enable-v1x",
-        "-v1x",
-        dest="enable_v1x",
-        help="Enable detect v1x.",
-        action="store_true",
+        "--detect-version",
+        help="detect v1/v2.",
+        default="v1",
     )
 
     args = parser.parse_args()
@@ -138,6 +134,6 @@ if __name__ == "__main__":
         config["keys"],
         args.ip,
         total_num=args.num,
-        enable_v1x=args.enable_v1x,
+        detect_version=args.detect_version,
         detect_timeout=args.detect_timeout,
     )

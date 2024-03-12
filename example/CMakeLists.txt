@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(test_aidk VERSION 1.2)
+project(test_aidk VERSION 1.3)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -17,10 +17,12 @@ find_package(Eigen3 REQUIRED)
 # Add the executable target
 add_executable(test_aidk_compute test_aidk_compute.cpp)
 add_executable(test_aidk_compute_image test_aidk_compute_image.cpp)
+add_executable(test_aidk_camera test_aidk_camera.cpp)
 add_executable(test_aidk_others test_aidk_others.cpp)
 
 # Link the static library and any other necessary libraries
 target_link_libraries(test_aidk_compute PRIVATE flexiv::flexiv_aidk)
 target_link_libraries(test_aidk_compute_image PRIVATE flexiv::flexiv_aidk
                                                       opencv_imgcodecs)
+target_link_libraries(test_aidk_camera PRIVATE flexiv::flexiv_aidk opencv_imgcodecs)
 target_link_libraries(test_aidk_others PRIVATE flexiv::flexiv_aidk)

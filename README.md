@@ -4,10 +4,6 @@
 
 Flexiv AIDK (AI Development Kit), is a development kit to enable flexible AI service calling and control with client.
 
-## References
-
-[Flexiv AIDK Home Page](https://aidk.flexiv.com/) is the main reference. It contains important information including user manual and API documentation.
-
 ## Compatibility Overview
 
 | **Supported OS**               | **Supported processor** | **Supported language** | **Required compiler kit** |
@@ -15,9 +11,6 @@ Flexiv AIDK (AI Development Kit), is a development kit to enable flexible AI ser
 | Linux (Ubuntu 18/20/22 tested) | x86_64           | C++, Python            | build-essential           |
 
 ## Quick Start
-
-**NOTE:** the full documentation is in [Flexiv AIDK Manual](https://aidk.flexiv.com/manual/).
-
 
 ### Setup
 Before using c++ and python AIDK api, please make sure NoemaEdge is running.
@@ -72,19 +65,21 @@ The C++ interface of Flexiv AIDK is packed into a unified modern CMake library n
    Note: ``CMAKE_INSTALL_PREFIX`` is set to the same directory where ``flexiv_aidk`` was installed to.
 6. To run an compiled example program:
 
-        ./test_aidk_compute [address] [config_path] [total_num] [enable_v1x]
+        ./test_aidk_compute [address] [config_path] [total_num] [detect_version]
         ./test_aidk_compute_image [address] [config_path] [total_num] 
         ./test_aidk_others [address] [config_path] [version]
+        ./test_aidk_camera [address] [camera_id] [total_num]
 
 
      e.g. to communicate with NoemaEdge App (version v3.1.0) running in remote machine with ip 10.24.14.101:
 
-        ./test_aidk_compute 10.24.14.101 ../../config/GRASPNET.json 1 false
+        ./test_aidk_compute 10.24.14.101 ../../config/GRASPNET.json 1 v2
         ./test_aidk_compute_image 10.24.14.101 ../../config/GRASPNET_IMAGE.json 1 
         ./test_aidk_others 10.24.14.101 ../../config/GRASPNET.json v3.1.0
+        ./test_aidk_camera 10.24.14.101 CAMID_0 3
+ 
 
-
-     Note: Port ``18203`` is used, and ``sudo`` is not required unless prompted by the program.
+     Note: Port ``18203`` is used for detect service and port ``18201`` is used for camera service, and ``sudo`` is not required unless prompted by the program.
 
 
 ### Python AIDK
@@ -94,15 +89,15 @@ A brief instruction is provided below and applies to Linux.
 To run an example Python program:
 
         cd release/example_py
-        python3 test_aidk_compute.py --ip [address] --config [config_path] --num [num] (--enable-v1x)
+        python3 test_aidk_compute.py --ip [address] --config [config_path] --num [num] --detect-version [version]
         python3 test_aidk_compute_image.py --ip [address] --config [config_path] --num [num]
 
 For example, to communicate with local running NoemaEdge:
 
-        python3 test_aidk_compute.py --ip 127.0.0.1 --config ../config/GRASPNET.json --num 1
+        python3 test_aidk_compute.py --ip 127.0.0.1 --config ../config/GRASPNET.json --num 1 --detect-version v2
 The log is shown below:
 
-        INFO:root:Namespace(config='../config/GRASPNET.json', enable_v1x=False, ip='127.0.0.1', num=1)
+        INFO:root:Namespace(config='../config/GRASPNET.json', detect_version=v2, ip='127.0.0.1', num=1)
         INFO:root:Test config:
         {'project': 'GRASPNET', 'command': {'command': 'POSE6D', 'obj_name': 'GRASPNET_graspnet_0', 'coordinate_id': 0, 'camera_id': 'CAMID_0', 'instruction_id': -1, 'custom': 'test_0', 'camera_pose': [0.55, -0.034, 0.66, 0.0, -0.7071068, 0.7071068, 0.0]}, 'keys': ['obj_pose', 'double_value']}
         INFO:root:detect 0: 370.9 ms, 2.7 Hz, instruction -1
@@ -157,7 +152,6 @@ Note:  For Noema version >= v3.2.0, make sure "command" in config json is always
 
 | API | function | detail |  Noema version |
 | ---------------- | ---------------- |---------------- | ---------------- |
-| detect_v1x | computing | send a detect request V1x | >= v2.11.1
 | detect   | computing | send a detect request   | >= v2.10.0
 | detect_with_image   | computing | send a detect request with image  | >= v2.10.0
 | get_detected_obj_names | computing | function to get all detected object names   | >= v2.10.0
@@ -168,6 +162,8 @@ Note:  For Noema version >= v3.2.0, make sure "command" in config json is always
 | get_camera_intrinsic | computing | function to get camera intrinsic   | >= v2.10.0
 | reload_configs| configure | reload project config | >= v2.11.1
 | save_configs  | configure | save current project config   | >= v2.11.1
+| get_images   | others | get color and depth images from camera  | >= v3.2.0
+| get_camera_intrinsics   | others | get intrinsics from camera  | >= v3.2.0
 | is_ready | others | check whether AI Noema Edge is ready   | >= v2.10.0
 | get_current_state | others | get current status of AI Noema Edge  | >= v2.10.0
 | warmup | others | warmup current project, if configured on NoemaEdge   | >= v2.11.1
