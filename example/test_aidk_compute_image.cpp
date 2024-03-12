@@ -6,14 +6,17 @@
  */
 
 #include "flexiv/ai/aidk.hpp"
-#include <ctime>
-#include <fstream>
+
 #include <nlohmann/json.hpp>
 #include <opencv2/opencv.hpp>
+
+#include <ctime>
+#include <fstream>
 #include <typeinfo>
+
 using json = nlohmann::json;
 
-bool load_config(json &js, std::string file_path,
+bool load_config(json &js, std::string &file_path,
                  std::vector<double> &camera_pose,
                  std::vector<double> &camera_intrinsic,
                  std::vector<double> &tcp_pose, std::vector<double> &tcp_force)
@@ -21,29 +24,30 @@ bool load_config(json &js, std::string file_path,
     std::cout << "Config File: " << file_path << std::endl;
     std::ifstream file(file_path);
     file >> js;
-    camera_pose = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
-    camera_intrinsic = {0, 0, 0, 0, 0, 0};
-    tcp_pose = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
-    tcp_force = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    if (js["command"]["camera_pose"].type() != nlohmann::json::value_t::null) {
+
+    try {
         camera_pose = js["command"]["camera_pose"].get<std::vector<double>>();
-    }
-    if (js["command"]["camera_intrinsic"].type() !=
-        nlohmann::json::value_t::null) {
         camera_intrinsic =
             js["command"]["camera_intrinsic"].get<std::vector<double>>();
-    }
-    if (js["command"]["tcp_pose"].type() != nlohmann::json::value_t::null) {
         tcp_pose = js["command"]["tcp_pose"].get<std::vector<double>>();
-    }
-    if (js["command"]["tcp_force"].type() != nlohmann::json::value_t::null) {
         tcp_force = js["command"]["tcp_force"].get<std::vector<double>>();
+    } catch (const std::exception &e) {
+        std::cout << "Not in config" << std::endl;
+        camera_pose = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
+        camera_intrinsic = {0, 0, 0, 0, 0, 0};
+        tcp_pose = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
+        tcp_force = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     }
+
     return true;
 }
 
 int main(int argc, char **argv)
 {
+    std::cout << "Example Usage: ./test_aidk_compute_image [address] "
+                 "[config_path] [total_num]"
+              << std::endl;
+
     // init AIDK
     flexiv::ai::AIDKClient client(argv[1], 10);
 
@@ -53,7 +57,8 @@ int main(int argc, char **argv)
     std::vector<double> camera_intrinsic;
     std::vector<double> tcp_pose;
     std::vector<double> tcp_force;
-    load_config(js, argv[2], camera_pose, camera_intrinsic, tcp_pose,
+    std::string file_path = argv[2];
+    load_config(js, file_path, camera_pose, camera_intrinsic, tcp_pose,
                 tcp_force);
 
     // AI state check

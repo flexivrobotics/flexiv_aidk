@@ -6,45 +6,56 @@
  */
 
 #include "flexiv/ai/aidk.hpp"
+
+#include <nlohmann/json.hpp>
+
 #include <ctime>
 #include <fstream>
-#include <nlohmann/json.hpp>
 #include <typeinfo>
+
 using json = nlohmann::json;
 
-bool load_config(json &js, std::string file_path,
+bool load_config(json &js, std::string &file_path,
                  std::vector<double> &camera_pose,
+                 std::vector<double> &flange_pose,
                  std::vector<double> &tcp_pose, std::vector<double> &tcp_force)
 {
     std::cout << "Config File: " << file_path << std::endl;
     std::ifstream file(file_path);
     file >> js;
-    camera_pose = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
-    tcp_pose = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
-    tcp_force = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    if (js["command"]["camera_pose"].type() != nlohmann::json::value_t::null) {
+    try {
         camera_pose = js["command"]["camera_pose"].get<std::vector<double>>();
-    }
-    if (js["command"]["tcp_pose"].type() != nlohmann::json::value_t::null) {
+        flange_pose = js["command"]["flange_pose"].get<std::vector<double>>();
         tcp_pose = js["command"]["tcp_pose"].get<std::vector<double>>();
-    }
-    if (js["command"]["tcp_force"].type() != nlohmann::json::value_t::null) {
         tcp_force = js["command"]["tcp_force"].get<std::vector<double>>();
+    } catch (const std::exception &e) {
+        std::cout << "Not in config" << std::endl;
+        camera_pose = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
+        flange_pose = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
+        tcp_pose = {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
+        tcp_force = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     }
+
     return true;
 }
 
 int main(int argc, char **argv)
 {
+    std::cout << "Example Usage: ./test_aidk_compute [address] [config_path] "
+                 "[total_num] [detect_version]"
+              << std::endl;
+
     // init AIDK
     flexiv::ai::AIDKClient client(argv[1], 10);
 
     // load config file
     json js;
     std::vector<double> camera_pose;
+    std::vector<double> flange_pose;
     std::vector<double> tcp_pose;
     std::vector<double> tcp_force;
-    load_config(js, argv[2], camera_pose, tcp_pose, tcp_force);
+    std::string file_path = argv[2];
+    load_config(js, file_path, camera_pose, flange_pose, tcp_pose, tcp_force);
 
     // AI state check
     while (!client.is_ready()) {
@@ -65,17 +76,17 @@ int main(int argc, char **argv)
         std::this_thread::sleep_for(std::chrono::seconds(1));
         auto tic = std::chrono::system_clock::now();
 
-        std::string enable_v1x = argv[4];
+        std::string detect_version = argv[4];
         // ai >= v2.11.1
         bool state;
-        if (enable_v1x == "true") {
-            state = client.detect_v1x(js["command"]["direct_command"],
-                                      camera_pose, tcp_pose, tcp_force);
-        } else {
+        if (detect_version == "v1") {
             state = client.detect(
                 js["command"]["obj_name"], js["command"]["camera_id"],
                 js["command"]["coordinate_id"], camera_pose, tcp_pose,
                 tcp_force, js["command"]["command"], js["command"]["custom"]);
+        } else if (detect_version == "v2") {
+            state = client.detect_v2(js["command"]["direct_command"],
+                                     flange_pose, tcp_pose, tcp_force);
         }
 
         // print result
